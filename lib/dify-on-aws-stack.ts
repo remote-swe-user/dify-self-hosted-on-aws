@@ -13,6 +13,7 @@ import { ICertificate } from 'aws-cdk-lib/aws-certificatemanager';
 import { Repository } from 'aws-cdk-lib/aws-ecr';
 import { createVpc } from './constructs/vpc';
 import { EnvironmentProps } from './environment-props';
+import { ConsoleService } from './constructs/dify-services/console';
 
 /**
  * Mostly inherited from EnvironmentProps
@@ -33,6 +34,7 @@ export class DifyOnAwsStack extends cdk.Stack {
       useCloudFront = true,
       internalAlb = false,
       subDomain = 'dify',
+      additionalEnvironmentVariables,
     } = props;
 
     if (props.vpcId && (props.vpcIsolated != null || props.useNatInstance != null)) {
@@ -127,7 +129,8 @@ export class DifyOnAwsStack extends cdk.Stack {
       sandboxImageTag,
       allowAnySyscalls,
       customRepository,
-      additionalEnvironmentVariables: props.additionalEnvironmentVariables,
+      additionalEnvironmentVariables,
+      autoMigration: false,
     });
 
     new WebService(this, 'WebService', {
@@ -135,7 +138,18 @@ export class DifyOnAwsStack extends cdk.Stack {
       alb,
       imageTag,
       customRepository,
-      additionalEnvironmentVariables: props.additionalEnvironmentVariables,
+      additionalEnvironmentVariables,
+    });
+
+    new ConsoleService(this, 'ConsoleService', {
+      cluster,
+      alb,
+      postgres,
+      redis,
+      storageBucket,
+      imageTag: props.difyImageTagForConsole ?? 'latest',
+      customRepository,
+      additionalEnvironmentVariables,
     });
 
     new cdk.CfnOutput(this, 'DifyUrl', {

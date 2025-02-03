@@ -96,6 +96,14 @@ export interface EnvironmentProps {
   difySandboxImageTag?: string;
 
   /**
+   * The image tag to deploy the Dify api images used for console service.
+   * The images are pulled from [here](https://hub.docker.com/u/langgenius).
+   *
+   * @default "latest"
+   */
+  difyImageTagForConsole?: string;
+
+  /**
    * If true, Dify sandbox allows any system calls when executing code.
    * Do NOT set this property if you are not sure code executed in the sandbox
    * can be trusted or not.
