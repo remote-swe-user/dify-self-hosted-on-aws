@@ -182,6 +182,29 @@ To deploy on a closed network, please follow the steps below:
 6. After the deployment, please configure Bedrock in Dify with the same AWS region as your VPC (see [setup section](#setup-dify-to-use-bedrock))
     * This is **only required** if Bedrock API in other regions are not accessible from your vpc subnets.
 
+### Additional Environment Variables
+
+You can configure additional environment variables for Dify containers by using the `additionalEnvironmentVariables` property:
+
+```typescript
+new DifySelfHostedOnAwsStack(app, 'DifySelfHostedOnAwsStack', {
+  additionalEnvironmentVariables: {
+    'CONSOLE_CONTAINER': {
+      'CUSTOM_VAR1': 'value1',
+      'CUSTOM_VAR2': 'value2'
+    },
+    'API_CONTAINER': {
+      'API_CUSTOM_VAR': 'api-value'
+    },
+    'WORKER_CONTAINER': {
+      'WORKER_SETTING': 'worker-value'
+    }
+  }
+});
+```
+
+This allows you to inject custom environment variables for specific Dify containers to customize their behavior.
+
 ### Connect to Notion
 
 You can connect to [Notion](https://www.notion.com/) data by the following steps:
